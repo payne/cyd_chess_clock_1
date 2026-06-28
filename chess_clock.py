@@ -108,7 +108,6 @@ class ChessClock(Screen):
             for t in range(1, 6):
                 ssd.fill_rect(x + int(bw * t / 6), BAR_Y, 1, BAR_H, BLACK)
         self._draw_divider()
-        ssd.show()
 
     # ── Callbacks ─────────────────────────────────────────────────────────────
 
@@ -149,7 +148,6 @@ class ChessClock(Screen):
         w = MID - GAP
         for _ in range(6):
             ssd.fill_rect(x, 0, w, H, RED)
-            ssd.show()
             await asyncio.sleep_ms(350)
             ssd.fill_rect(x, 0, w, H, BLACK)
             ssd.show()

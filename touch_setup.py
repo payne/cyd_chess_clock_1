@@ -41,8 +41,10 @@ from touch.xpt2046 import XPT2046
 
 tspi = SPI(2, 2_500_000, sck=Pin(25), mosi=Pin(32), miso=Pin(39))
 tpad = XPT2046(tspi, Pin(33, Pin.OUT, value=1), ssd)
-# After running touch/setup.py for calibration, add a line like:
-#   tpad.init(240, 320, xmin, ymin, xmax, ymax, trans, rr, rc)
+# Correct the default axis mapping: ABCTouch defaults to (ssd.height, ssd.width)
+# which caps col at 240 instead of 320, making the right half unreachable.
+# trans/rr/rc may need adjusting; run touch/setup.py to calibrate precisely.
+tpad.init(320, 240, 0, 0, 4095, 4095, False, False, False)
 
 # ── Register with GUI framework ───────────────────────────────────────────────
 from gui.core.tgui import Display
