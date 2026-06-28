@@ -181,6 +181,21 @@ All four quadrants correctly mapped. ✓
 tpad.init(240, 320, 0, 0, 4095, 4095, True, True, True)
 ```
 
+**Result:** Both buttons working. Flicker gone. Chess clock fully functional. ✓
+
+---
+
+## Final status — COMPLETE
+
+All features working on hardware:
+- Player A tap starts A's countdown, pauses B
+- Player B tap starts B's countdown, pauses A
+- RST button resets both clocks to 30:00
+- Gauge bar drains green → amber (< 5 min) → red (< 1 min)
+- 5-minute tick marks on gauge
+- Timeout flashes the losing player's half red
+- Auto-starts on board reset via `main.py`
+
 ---
 
 ## Final file list
