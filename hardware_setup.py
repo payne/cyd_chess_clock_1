@@ -10,7 +10,8 @@ Copy this file and chess_clock.py to the device root, then:
 
 Pin mapping (most common CYD variant):
   Display ILI9341  SPI1/HSPI  CLK=14  MOSI=13  MISO=12
-                              CS=15   DC=2     RST=0    BL=21
+                              CS=15   DC=2     BL=21
+                              RST — not wired to any GPIO on CYD; pulled to 3V3
   Touch   XPT2046  SPI2/VSPI  CLK=25  MOSI=32  MISO=39
                               CS=33   IRQ=36
 
@@ -22,13 +23,17 @@ from machine import SPI, Pin, freq
 freq(240_000_000)   # 240 MHz for snappy UI response
 
 # ── ILI9341 display (HSPI) ───────────────────────────────────────────────────
+# RST is intentionally omitted: on the CYD the ILI9341 RST pin is pulled to
+# 3.3 V via a resistor and is NOT connected to an ESP32 GPIO.  GPIO 0 is the
+# ESP32 boot-strapping pin — driving it as an output holds the display in reset.
+# The driver performs a software reset (command 0x01) when rst=None.
 from drivers.ili9341.ili9341_16bit import ILI9341 as SSD
 
 _dspi = SPI(1, baudrate=40_000_000, sck=Pin(14), mosi=Pin(13), miso=Pin(12))
 ssd   = SSD(_dspi,
             dc=Pin(2,  Pin.OUT, value=0),
             cs=Pin(15, Pin.OUT, value=1),
-            rst=Pin(0, Pin.OUT, value=1),
+            rst=None,
             height=240, width=320,
             usd=False,   # set True if display is mounted upside-down
             bgr=False)   # set True if red and blue are swapped
