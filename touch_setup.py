@@ -44,7 +44,12 @@ tpad = XPT2046(tspi, Pin(33, Pin.OUT, value=1), ssd)
 # Correct the default axis mapping: ABCTouch defaults to (ssd.height, ssd.width)
 # which caps col at 240 instead of 320, making the right half unreachable.
 # trans/rr/rc may need adjusting; run touch/setup.py to calibrate precisely.
-tpad.init(320, 240, 0, 0, 4095, 4095, False, False, False)
+# Axes on the CYD are transposed and both reflected vs the ILI9341 landscape frame:
+#   rawX ≈ constant for left/right taps → rawX is the vertical (row) axis
+#   rawY ≈ varies for left/right taps  → rawY is the horizontal (col) axis
+#   Large rawY = left edge, small rawY = right edge  → rc=True (col reflect)
+#   Large rawX = top edge, small rawX = bottom edge  → rr=True (row reflect)
+tpad.init(240, 320, 0, 0, 4095, 4095, True, True, True)
 
 # ── Register with GUI framework ───────────────────────────────────────────────
 from gui.core.tgui import Display
